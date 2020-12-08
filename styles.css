@@ -1,6 +1,35 @@
 body.format-envfpsup .section-envfpsup-summary,
-body.format-envfpsup .course-content ul li.section.main.section-envfpsup-summary
-{
+body.format-envfpsup .course-content ul li.section.main.section-envfpsup-summary {
     border: none;
 }
 
+body.format-envfpsup .course-content ul.envfpsup {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+body.format-envfpsup .course-content ul.envfpsup {
+    margin-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+body.format-envfpsup .course-content ul.envfpsup li.section .content {
+    margin: 0;
+    padding: 0;
+}
+
+@media (min-width: 576px) {
+    body.format-envfpsup .course-content ul.envfpsup li.section .summary,
+    body.format-envfpsup .course-content ul.envfpsup li.section .content > .availabilityinfo {
+        margin-left: 25px;
+    }
+}
+
+body.format-envfpsup .course-content ul.envfpsup li.section .left,
+body.format-envfpsup .course-content ul.envfpsup li.section .right
+{
+    padding: 0 6px 0;
+    text-align: right;
+    width: auto;
+}

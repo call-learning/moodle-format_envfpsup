@@ -35,6 +35,25 @@ require_once($CFG->dirroot. '/course/format/topics/lib.php');
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_envfpsup extends format_base {
+
+    /**
+     * Returns true if this course format uses sections
+     *
+     * This function may be called without specifying the course id
+     * i.e. in {@link course_format_uses_sections()}
+     *
+     * Developers, note that if course format does use sections there should be defined a language
+     * string with the name 'sectionname' defining what the section relates to in the format, i.e.
+     * $string['sectionname'] = 'Topic';
+     * or
+     * $string['sectionname'] = 'Week';
+     *
+     * @return bool
+     */
+    public function uses_sections() {
+        return true; // This also enables the drag and drop for activities.
+    }
+
     /**
      * Returns the information about the ajax support in the given source format
      *
@@ -169,8 +188,16 @@ class format_envfpsup extends format_base {
             $courseconfig = get_config('moodlecourse');
             $courseformatoptions = array(
                 'coursedisplay' => array(
-                    'default' => $courseconfig->coursedisplay,
-                    'type' => PARAM_INT,
+                    'label' => new lang_string('coursedisplay'),
+                    'element_type' => 'select',
+                    'element_attributes' => array(
+                        array(
+                            COURSE_DISPLAY_SINGLEPAGE => new lang_string('coursedisplay_single'),
+                            COURSE_DISPLAY_MULTIPAGE => new lang_string('coursedisplay_multi')
+                        )
+                    ),
+                    'help' => 'coursedisplay',
+                    'help_component' => 'moodle'
                 ),
             );
         }
