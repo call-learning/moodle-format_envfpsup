@@ -25,15 +25,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['addsections'] = 'Add section';
-$string['currentsection'] = 'This section';
+$string['addsections'] = 'Ajouter une section';
+$string['currentsection'] = 'Cette section';
 $string['envfpsupoutline'] = 'ENVF Parcoursup outline';
-$string['editsection'] = 'Edit section';
-$string['editsectionname'] = 'Edit section name';
-$string['deletesection'] = 'Delete section';
+$string['editsection'] = 'Editer la section';
+$string['editsectionname'] = 'Edit le nom de la section';
+$string['deletesection'] = 'Effacer section';
 $string['pluginname'] = 'ENVF Parcoursup';
-$string['hidefromothers'] = 'Hide topic';
-$string['newsectionname'] = 'New name for section {$a}';
+$string['newsectionname'] = 'Nouveau nom pour la section {$a}';
 $string['sectionname'] = 'Section';
-$string['hidefromothers'] = 'Hide section';
-$string['showfromothers'] = 'Show section';
+$string['hidefromothers'] = 'Cacher section';
+$string['showfromothers'] = 'Montrer section';

@@ -19,20 +19,19 @@
  *
  * @package     format_envfpsup
  * @copyright   2020 Laurent David - CALL Learning <laurent@call-learning.fr>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->dirroot. '/course/format/lib.php');
-require_once($CFG->dirroot. '/course/format/topics/lib.php');
+require_once($CFG->dirroot . '/course/format/lib.php');
 
 /**
  * Main class for the ENVF course format
  *
  * @package     format_envfpsup
  * @copyright   2020 Laurent David - CALL Learning <laurent@call-learning.fr>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_envfpsup extends format_base {
 
@@ -44,7 +43,7 @@ class format_envfpsup extends format_base {
      *
      * Developers, note that if course format does use sections there should be defined a language
      * string with the name 'sectionname' defining what the section relates to in the format, i.e.
-     * $string['sectionname'] = 'Topic';
+     * $string['sectionname'] = 'Section';
      * or
      * $string['sectionname'] = 'Week';
      *
@@ -67,6 +66,7 @@ class format_envfpsup extends format_base {
         $ajaxsupport->capable = true;
         return $ajaxsupport;
     }
+
     /**
      * Custom action after section has been moved in AJAX mode
      *
@@ -74,7 +74,7 @@ class format_envfpsup extends format_base {
      *
      * @return array This will be passed in ajax respose
      */
-    function ajax_section_move() {
+    public function ajax_section_move() {
         global $PAGE;
         $titles = array();
         $course = $this->get_course();
@@ -88,6 +88,35 @@ class format_envfpsup extends format_base {
         return array('sectiontitles' => $titles, 'action' => 'move');
     }
 
+    /**
+     * Returns the display name of the given section that the course prefers.
+     *
+     * Use section name is specified by user. Otherwise use default ("Topic #")
+     *
+     * @param int|stdClass $section Section object from database or just field section.section
+     * @return string Display name that the course format prefers, e.g. "Topic 2"
+     */
+    public function get_section_name($section) {
+        $section = $this->get_section($section);
+        if ((string) $section->name !== '') {
+            return format_string($section->name, true,
+                array('context' => context_course::instance($this->courseid)));
+        } else {
+            return $this->get_default_section_name($section);
+        }
+    }
+
+    /**
+     * Whether this format allows to delete sections
+     *
+     * Do not call this function directly, instead use {@link course_can_delete_section()}
+     *
+     * @param int|stdClass|section_info $section
+     * @return bool
+     */
+    public function can_delete_section($section) {
+        return true;
+    }
 
     /**
      * Loads all the activities of section > 0 into the navigation
@@ -121,8 +150,8 @@ class format_envfpsup extends format_base {
         if ($course = $this->get_course()) {
             global $CFG;
             require_once($CFG->dirroot . '/course/lib.php');
-            foreach($navigation->children as $children) {
-                    $children->remove();
+            foreach ($navigation->children as $children) {
+                $children->remove();
             }
             $navigation->add_node($node);
             $modinfo = get_fast_modinfo($course);
@@ -163,7 +192,6 @@ class format_envfpsup extends format_base {
                     $activityname = format_string($cm->name, true, array('context' => context_module::instance($cm->id)));
                     $action = new moodle_url($activityurl);
 
-
                     if ($activitydisplay) {
                         $node->add($activityname, $action, $activitynodetype, null, $cm->id, $icon);
                     }
@@ -175,9 +203,8 @@ class format_envfpsup extends format_base {
     /**
      * Definitions of the additional options that this course format uses for course
      *
-     * Topics format uses the following options:
+     * Course display must be defined
      * - coursedisplay
-     * - hiddensections
      *
      * @param bool $foreditform
      * @return array of options
@@ -202,6 +229,25 @@ class format_envfpsup extends format_base {
             );
         }
         return $courseformatoptions;
+    }
+}
+
+/**
+ * Implements callback inplace_editable() allowing to edit values in-place
+ *
+ * @param string $itemtype
+ * @param int $itemid
+ * @param mixed $newvalue
+ * @return \core\output\inplace_editable
+ */
+function format_envfpsup_inplace_editable($itemtype, $itemid, $newvalue) {
+    global $DB, $CFG;
+    require_once($CFG->dirroot . '/course/lib.php');
+    if ($itemtype === 'sectionname' || $itemtype === 'sectionnamenl') {
+        $section = $DB->get_record_sql(
+            'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
+            array($itemid, 'envfpsup'), MUST_EXIST);
+        return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
     }
 }
 

@@ -19,32 +19,69 @@
  *
  * @package     format_envfpsup
  * @copyright   2020 Laurent David - CALL Learning <laurent@call-learning.fr>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot.'/course/format/renderer.php');
-require_once($CFG->dirroot.'/course/format/topics/renderer.php');
+require_once($CFG->dirroot . '/course/format/renderer.php');
+require_once($CFG->dirroot . '/course/format/topics/renderer.php');
 
 /**
  * Basic renderer for envfpsup format.
  *
  * @package     format_envfpsup
  * @copyright   2020 Laurent David - CALL Learning <laurent@call-learning.fr>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class format_envfpsup_renderer extends  format_section_renderer_base {
-    // $title  = $this->render(new pix_icon('t/right', '', 'core')) . $title;
+class format_envfpsup_renderer extends format_section_renderer_base {
+
+    /**
+     * Start section list
+     *
+     * @return string
+     */
     protected function start_section_list() {
         return html_writer::start_tag('ul', array('class' => 'envfpsup'));
     }
 
+    /**
+     * End section list
+     *
+     * @return string
+     */
     protected function end_section_list() {
         return html_writer::end_tag('ul');
     }
 
+    /**
+     * Page title
+     *
+     * @return lang_string|string
+     * @throws coding_exception
+     */
     protected function page_title() {
         return get_string('envfpsupoutline', 'format_envfpsup');
+    }
+
+    /**
+     * Generate the section title, wraps it in a link to the section page if page is to be displayed on a separate page
+     *
+     * @param stdClass $section The course_section entry from DB
+     * @param stdClass $course The course entry from DB
+     * @return string HTML to output.
+     */
+    public function section_title($section, $course) {
+        return $this->render(course_get_format($course)->inplace_editable_render_section_name($section));
+    }
+
+    /**
+     * Generate the section title to be displayed on the section page, without a link
+     *
+     * @param stdClass $section The course_section entry from DB
+     * @param stdClass $course The course entry from DB
+     * @return string HTML to output.
+     */
+    public function section_title_without_link($section, $course) {
+        return $this->render(course_get_format($course)->inplace_editable_render_section_name($section, false));
     }
 }
