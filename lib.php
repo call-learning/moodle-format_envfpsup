@@ -145,8 +145,17 @@ class format_envfpsup extends format_base {
      *
      * @param global_navigation $navigation
      * @param navigation_node $node The course node within the navigation
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     public function extend_course_navigation($navigation, navigation_node $node) {
+        // Remove the course list from the flat nav bar.
+        $mycourses = $navigation->get('mycourses', navigation_node::TYPE_ROOTNODE);
+        $mycourses->showinflatnavigation = false;
+        foreach($mycourses->children as $allmycourses) {
+            $allmycourses->showinflatnavigation = false;
+        }
+
         if ($course = $this->get_course()) {
             global $CFG;
             require_once($CFG->dirroot . '/course/lib.php');
