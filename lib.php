@@ -152,7 +152,7 @@ class format_envfpsup extends format_base {
         // Remove the course list from the flat nav bar.
         $mycourses = $navigation->get('mycourses', navigation_node::TYPE_ROOTNODE);
         $mycourses->showinflatnavigation = false;
-        foreach($mycourses->children as $allmycourses) {
+        foreach ($mycourses->children as $allmycourses) {
             $allmycourses->showinflatnavigation = false;
         }
 
@@ -193,7 +193,9 @@ class format_envfpsup extends format_base {
                         $activityurl = null;
                     } else {
                         $activityurl = $url->out();
-                        $activitydisplay = $cm->is_visible_on_course_page() ? true : false;
+                        $activitydisplay = $cm->uservisible ? true : false;
+                        // Display the activity only for editing teacher in the menu
+                        // If not we check access.
                         if (global_navigation::module_extends_navigation($cm->modname)) {
                             $activitynodetype = navigation_node::NODETYPE_BRANCH;
                         }
