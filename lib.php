@@ -209,6 +209,9 @@ class format_envfpsup extends format_base {
                 }
             }
         }
+        if ($node = $navigation->find('mycourses', global_navigation::TYPE_ROOTNODE)) {
+            $node->remove();
+        }
     }
 
     /**
