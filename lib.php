@@ -180,7 +180,7 @@ class format_envfpsup extends format_base {
                 foreach ($modinfo->sections[$section->section] as $cmid) {
                     $cm = $modinfo->cms[$cmid];
                     if ($cm->icon) {
-                        $icon = new pix_icon($cm->icon, get_string('modulename', $cm->name), $cm->iconcomponent);
+                        $icon = new pix_icon($cm->icon, get_string('modulename', $cm->modname), $cm->iconcomponent);
                     } else {
                         $icon = new pix_icon('icon', get_string('modulename', $cm->modname), $cm->modname);
                     }
